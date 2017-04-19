@@ -20,35 +20,36 @@ public class MountedHorseTeleporter implements IPlayerTeleport
 	@Override
 	public boolean OnPlayerTeleport(IPlayer player, ILocation from, final ILocation to)
 	{
-		if (from.getWorld().isWorld(to.getWorld()) && from.distance(to) > 200)
-		{
-			IWorld world = from.getWorld();
-			for (IEntity entity : world.getEntities())
-			{
-				if (entity instanceof ILivingEntity)
-				{
-					ILivingEntity livingEntity = (ILivingEntity) entity;
-					if (livingEntity.isLeashed() && livingEntity.getLeashHolder() instanceof IPlayer)
-					{
-						IPlayer leashHolder = (IPlayer) livingEntity.getLeashHolder();
-						if (leashHolder.getName().equals(player.getName()))
-						{
-							final Class<?> entityClass = ObjectUnwrapper.getMinecraft(livingEntity).getClass();
-							final String entityData = EntityCompacter.convertEntityToString(livingEntity);
-							livingEntity.remove();
+		//Check if player is teleporting to the same world and the teleportation distance is large enough.
+		if (!from.getWorld().isWorld(to.getWorld()) || from.distance(to) < 200)
+			return true;
 
-							scheduler.startSyncTask(
-									new Runnable()
+		IWorld world = from.getWorld();
+		for (IEntity entity : world.getEntities())
+		{
+			if (entity instanceof ILivingEntity)
+			{
+				ILivingEntity livingEntity = (ILivingEntity) entity;
+				if (livingEntity.isLeashed() && livingEntity.getLeashHolder() instanceof IPlayer)
+				{
+					IPlayer leashHolder = (IPlayer) livingEntity.getLeashHolder();
+					if (leashHolder.getName().equals(player.getName()))
+					{
+						final Class<?> entityClass = ObjectUnwrapper.getMinecraft(livingEntity).getClass();
+						final String entityData = EntityCompacter.convertEntityToString(livingEntity);
+						livingEntity.remove();
+
+						scheduler.startSyncTask(
+								new Runnable()
+								{
+									@Override
+									public void run()
 									{
-										@Override
-										public void run()
-										{
-											EntityCompacter.spawnEntityFromString(entityClass, to, entityData);
-										}
-									},
-									10L
-							);
-						}
+										EntityCompacter.spawnEntityFromString(entityClass, to, entityData);
+									}
+								},
+								10L
+						);
 					}
 				}
 			}
