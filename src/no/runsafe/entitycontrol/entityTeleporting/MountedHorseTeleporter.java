@@ -37,14 +37,17 @@ public class MountedHorseTeleporter implements IPlayerTeleport
 							final String entityData = EntityCompacter.convertEntityToString(livingEntity);
 							livingEntity.remove();
 
-							scheduler.startSyncTask(new Runnable()
-							{
-								@Override
-								public void run()
-								{
-									EntityCompacter.spawnEntityFromString(entityClass, to, entityData);
-								}
-							}, 10L);
+							scheduler.startSyncTask(
+									new Runnable()
+									{
+										@Override
+										public void run()
+										{
+											EntityCompacter.spawnEntityFromString(entityClass, to, entityData);
+										}
+									},
+									10L
+							);
 						}
 					}
 				}
