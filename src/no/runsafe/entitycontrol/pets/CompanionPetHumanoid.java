@@ -20,12 +20,12 @@ public class CompanionPetHumanoid extends EntityZombie implements ICompanionPet
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
 
-		player = ObjectUnwrapper.getMinecraft(owner);
-		if (player == null)
+		if (owner == null)
 		{
 			dead = true;
 			return;
 		}
+		player = owner;
 
 		// Remove all default path-finders.
 		try
@@ -42,7 +42,7 @@ public class CompanionPetHumanoid extends EntityZombie implements ICompanionPet
 
 		this.world = world;
 		goalSelector.a(0, new PathfinderGoalFloat(this));
-		goalSelector.a(1, new PathfinderGoalFollowPlayer(owner, this));
+		goalSelector.a(1, new PathfinderGoalFollowPlayer(player, this));
 		setBaby(true);
 
 		/*
@@ -99,7 +99,7 @@ public class CompanionPetHumanoid extends EntityZombie implements ICompanionPet
 	{
 		super.K();
 
-		if (!player.isAlive() || !player.world.worldData.getName().equals(world.getName()) || !CompanionHandler.entityIsSummoned(this))
+		if (player.isDead() || !world.equals(player.getWorld()) || !CompanionHandler.entityIsSummoned(this))
 			dead = true;
 
 		if (randomThingTicks > 0)
@@ -132,6 +132,6 @@ public class CompanionPetHumanoid extends EntityZombie implements ICompanionPet
 	private IWorld world;
 	private int randomThingTicks = 12000;
 	private int randomThingProgress = 0;
-	protected EntityPlayer player;
+	protected IPlayer player;
 	protected final Random random = new Random();
 }

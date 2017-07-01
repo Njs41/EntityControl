@@ -18,12 +18,12 @@ public class OcelotCompanion extends EntityOcelot implements ICompanionPet
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
 
-		player = ObjectUnwrapper.getMinecraft(owner);
-		if (player == null)
+		if (owner == null)
 		{
 			dead = true;
 			return;
 		}
+		player = owner;
 
 		// Remove all default path-finders.
 		try
@@ -40,7 +40,7 @@ public class OcelotCompanion extends EntityOcelot implements ICompanionPet
 
 		this.world = world;
 		goalSelector.a(0, new PathfinderGoalFloat(this));
-		goalSelector.a(1, new PathfinderGoalFollowPlayer(owner, this));
+		goalSelector.a(1, new PathfinderGoalFollowPlayer(player, this));
 		setAgeRaw(Integer.MIN_VALUE);
 
 		/*
@@ -84,10 +84,10 @@ public class OcelotCompanion extends EntityOcelot implements ICompanionPet
 	{
 		super.K();
 
-		if (!player.isAlive() || !player.world.worldData.getName().equals(world.getName()) || !CompanionHandler.entityIsSummoned(this))
+		if (!player.isDead() || !world.equals(player.getWorld()) || !CompanionHandler.entityIsSummoned(this))
 			dead = true;
 	}
 
 	private IWorld world;
-	protected EntityPlayer player;
+	protected IPlayer player;
 }
