@@ -16,9 +16,16 @@ public class CompanionPetHumanoid extends EntityZombie implements ICompanionPet
 	 * Constructor for CompanionPetHumanoid
 	 * @param world World object is created in
 	 */
-	public CompanionPetHumanoid(IWorld world)
+	public CompanionPetHumanoid(IWorld world, IPlayer owner)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
+
+		player = ObjectUnwrapper.getMinecraft(owner);
+		if (player == null)
+		{
+			dead = true;
+			return;
+		}
 
 		// Remove all default path-finders.
 		try
@@ -35,6 +42,7 @@ public class CompanionPetHumanoid extends EntityZombie implements ICompanionPet
 
 		this.world = world;
 		goalSelector.a(0, new PathfinderGoalFloat(this));
+		goalSelector.a(1, new PathfinderGoalFollowPlayer(player, this, 1.0D, 2F, 2F));
 		setBaby(true);
 
 		/*
@@ -43,16 +51,6 @@ public class CompanionPetHumanoid extends EntityZombie implements ICompanionPet
 		 * v1_10_R1 and up: setSilent
 		 */
 		b(false);
-	}
-
-	/**
-	 * Sets the player the object will follow.
-	 * @param player Player to follow.
-	 */
-	public void setFollowingPlayer(IPlayer player)
-	{
-		this.player = ObjectUnwrapper.getMinecraft(player);
-		goalSelector.a(1, new PathfinderGoalFollowPlayer(this.player, this, 1.0D, 2F, 2F));
 	}
 
 	/**
@@ -101,7 +99,7 @@ public class CompanionPetHumanoid extends EntityZombie implements ICompanionPet
 	{
 		super.K();
 
-		if (player == null || !player.isAlive() || !player.world.worldData.getName().equals(world.getName()) || !CompanionHandler.entityIsSummoned(this))
+		if (!player.isAlive() || !player.world.worldData.getName().equals(world.getName()) || !CompanionHandler.entityIsSummoned(this))
 			dead = true;
 
 		if (randomThingTicks > 0)

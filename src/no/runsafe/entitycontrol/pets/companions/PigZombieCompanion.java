@@ -4,6 +4,7 @@ import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.Items;
 import no.runsafe.entitycontrol.pets.CompanionPetHumanoid;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 import no.runsafe.framework.minecraft.Item;
 import no.runsafe.framework.minecraft.Sound;
@@ -11,9 +12,9 @@ import no.runsafe.framework.minecraft.item.meta.RunsafeSkull;
 
 public class PigZombieCompanion extends CompanionPetHumanoid
 {
-	public PigZombieCompanion(IWorld world)
+	public PigZombieCompanion(IWorld world, IPlayer owner)
 	{
-		super(world);
+		super(world, owner);
 	}
 
 	@Override

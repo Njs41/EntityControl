@@ -62,9 +62,8 @@ public class CompanionHandler implements IServerReady, IPlayerRightClick, IPlaye
 
 		try
 		{
-			ICompanionPet pet = (ICompanionPet) type.getEntityClass().getConstructor(IWorld.class).newInstance(world);
+			ICompanionPet pet = (ICompanionPet) type.getEntityClass().getConstructor(IWorld.class, IPlayer.class).newInstance(world, follower);
 			pet.setLocation(location.getX(), location.getY(), location.getZ(), 0, 0);
-			pet.setFollowingPlayer(follower);
 			rawWorld.addEntity((EntityInsentient) pet);
 
 			UUID playerUUID = follower.getUniqueId();

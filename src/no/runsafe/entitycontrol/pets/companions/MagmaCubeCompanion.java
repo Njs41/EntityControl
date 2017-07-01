@@ -2,13 +2,14 @@ package no.runsafe.entitycontrol.pets.companions;
 
 import no.runsafe.entitycontrol.pets.CompanionPetAnimal;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.Sound;
 
 public class MagmaCubeCompanion extends CompanionPetAnimal
 {
-	public MagmaCubeCompanion(IWorld world)
+	public MagmaCubeCompanion(IWorld world, IPlayer owner)
 	{
-		super(world);
+		super(world, owner);
 		this.datawatcher.watch(16, (byte) 1);
 	}
 

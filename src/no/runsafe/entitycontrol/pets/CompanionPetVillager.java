@@ -16,9 +16,16 @@ public class CompanionPetVillager extends EntityVillager implements ICompanionPe
 	 * Constructor for CompanionPetVillager
 	 * @param world World object is created in
 	 */
-	public CompanionPetVillager(IWorld world)
+	public CompanionPetVillager(IWorld world, IPlayer owner)
 	{
 		super(ObjectUnwrapper.getMinecraft(world));
+
+		player = ObjectUnwrapper.getMinecraft(owner);
+		if (player == null)
+		{
+			dead = true;
+			return;
+		}
 
 		// Remove all default path-finders.
 		try
@@ -35,6 +42,7 @@ public class CompanionPetVillager extends EntityVillager implements ICompanionPe
 
 		this.world = world;
 		goalSelector.a(0, new PathfinderGoalFloat(this));
+		goalSelector.a(1, new PathfinderGoalFollowPlayer(player, this, 1.0D, 2F, 2F));
 		setAgeRaw(Integer.MIN_VALUE);
 
 		/*
@@ -55,17 +63,6 @@ public class CompanionPetVillager extends EntityVillager implements ICompanionPe
 	public EntityAgeable createChild(EntityAgeable entityAgeable)
 	{
 		return null;
-	}
-
-	/**
-	 * Sets the player the object will follow.
-	 * @param player Player to follow.
-	 */
-	@Override
-	public void setFollowingPlayer(IPlayer player)
-	{
-		this.player = ObjectUnwrapper.getMinecraft(player);
-		goalSelector.a(1, new PathfinderGoalFollowPlayer(this.player, this, 1.0D, 2F, 2F));
 	}
 
 	/**
@@ -114,7 +111,7 @@ public class CompanionPetVillager extends EntityVillager implements ICompanionPe
 	{
 		super.K();
 
-		if (player == null || !player.isAlive() || !player.world.worldData.getName().equals(world.getName()) || !CompanionHandler.entityIsSummoned(this))
+		if (!player.isAlive() || !player.world.worldData.getName().equals(world.getName()) || !CompanionHandler.entityIsSummoned(this))
 			dead = true;
 	}
 
