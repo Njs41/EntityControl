@@ -40,7 +40,7 @@ public class SheepCompanion extends EntitySheep implements ICompanionPet
 
 		this.world = world;
 		goalSelector.a(0, new PathfinderGoalFloat(this));
-		goalSelector.a(1, new PathfinderGoalFollowPlayer(player, this, 1.0D, 2F, 2F));
+		goalSelector.a(1, new PathfinderGoalFollowPlayer(owner, this));
 		setAgeRaw(Integer.MIN_VALUE);
 
 		/*

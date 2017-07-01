@@ -1,6 +1,8 @@
 package no.runsafe.entitycontrol.pets;
 
 import net.minecraft.server.v1_8_R3.*;
+import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.internal.wrapper.ObjectUnwrapper;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -11,20 +13,13 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal
 	 * Constructor for PathfinderGoalFollowPlayer
 	 * @param player Player to follow
 	 * @param entity This entity.
-	 * @param entitySpeed a double.
-	 * @param inputPlayerDistanceLimit Distance before entity will run to player.
-	 * @param inputClosestPointToPlayer Distance before entity will stop running to player.
 	 */
-	public PathfinderGoalFollowPlayer(EntityPlayer player, EntityInsentient entity, double entitySpeed, float inputPlayerDistanceLimit, float inputClosestPointToPlayer
-	)
+	public PathfinderGoalFollowPlayer(IPlayer player, EntityInsentient entity)
 	{
 		this.entity = entity;
 		this.world = entity.world;
-		this.player = player;
-		this.speed = entitySpeed;
+		this.player = ObjectUnwrapper.getMinecraft(player);
 		this.entityNavigation = (Navigation) entity.getNavigation();
-		this.playerDistanceLimit = inputPlayerDistanceLimit;
-		this.closestPointToPlayer = inputClosestPointToPlayer;
 		this.a(3); // Something to do with whether or not certain tasks can run concurrently.
 	}
 
@@ -180,10 +175,10 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal
 	private EntityInsentient entity;
 	private EntityPlayer player;
 	private World world;
-	private double speed;
+	private double speed = 1;
 	private Navigation entityNavigation;
 	private int playerTeleportTimer;
-	private float closestPointToPlayer; // Distance before entity will stop running to player.
-	private float playerDistanceLimit; // Distance before entity will run to player.
+	private float closestPointToPlayer = 2F; // Distance before entity will stop running to player.
+	private float playerDistanceLimit = 2F; // Distance before entity will run to player.
 	private boolean i; // Something to do with if the entity is traveling through water or not.
 }
